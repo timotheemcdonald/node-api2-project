@@ -75,6 +75,8 @@ router.get('/:id', (req, res) => {
 })
 
 router.get('/:id/comments', (req, res) => {
+    // const {id} = req.params
+
     Posts.findPostComments(req.params.id)
     .then(posts => {
         if (posts) {
