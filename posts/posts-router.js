@@ -6,11 +6,12 @@ const router = express.Router()
 
 router.post('/', (req, res) => {
     const newPost = req.body
-    const newTitle = changes.title
-    const newContent = changes.content
+    const newTitle = newPost.title
+    const newContent = newPost.contents
     
-    Posts.add(newPost)
+    Posts.insert(newPost)
     .then(post => {
+        // res.status(201).json(post)
         if(newTitle && newContent){
         res.status(201).json(post)}
         else {
@@ -25,11 +26,15 @@ router.post('/', (req, res) => {
 
 router.post('/:id/comments', (req, res) => {
     const newPost = req.body
-    const newText = changes.text
+    const newText = newPost.text
+    const {id} = req.params
     
-    Posts.add(req.params.id, newPost)
+    Posts.findById(id)
+ 
     .then(post => {
+      
         if(post){
+            Posts.insertComment(newPost)
             res.status(201).json(post)
         } else {
             res.status(404).json({ message: "The post with the specified ID does not exist." })
@@ -73,7 +78,7 @@ router.get('/:id/comments', (req, res) => {
     Posts.findPostComments(req.params.id)
     .then(posts => {
         if (posts) {
-            res.status(200).json(posts.comment)
+            res.status(200).json(posts)
         } else {
             res.status(404).json({ message: "The post with the specified ID does not exist." })
         }
@@ -100,7 +105,7 @@ router.delete('/:id', (req, res) => {
 router.put('/:id', (req, res) => {
     const changes = req.body
     const newTitle = changes.title
-    const newContent = changes.content
+    const newContent = changes.contents
 
     Posts.update(req.params.id, changes)
     .then (post => {

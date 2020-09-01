@@ -1,5 +1,6 @@
 const express = require('express')
 
+const Posts = require('./data/db')
 const postsRouter = require('./posts/posts-router')
 
 const server = express()
